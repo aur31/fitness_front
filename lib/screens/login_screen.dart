@@ -144,11 +144,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               };
                               await context.read<UserViewModel>().login(context, data).then((val){
                                 if(val){
-                                  if(context.read<AppSharedPreferences>().user!.role == 0){
+                                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                                  Navigator.of(context).pushNamed("/");
+
+                                  /*if(context.read<AppSharedPreferences>().user!.role == 0){
                                     Navigator.of(context).pushNamed("/admin_dash");
                                   }else{
                                     Navigator.of(context).pushNamed("/user_dash");
-                                  }
+                                  }*/
                                 }
                               });
 

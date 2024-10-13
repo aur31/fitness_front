@@ -13,6 +13,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final client = ModalRoute.of(context)!.settings.arguments as User;
+
     return Scaffold(
         body: SafeArea(
           child: Stack(
@@ -54,6 +55,13 @@ class ProfilePage extends StatelessWidget {
                               backgroundImage: NetworkImage(
                                 'https://via.placeholder.com/150',
                               ),
+                              child: Text(
+                                '${client.name![0]}',
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(height: 16.0),
@@ -70,6 +78,7 @@ class ProfilePage extends StatelessWidget {
                           SizedBox(height: 24.0),
                           Expanded(
                               child: Container(
+                                width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(16.0),
@@ -98,30 +107,14 @@ class ProfilePage extends StatelessWidget {
                                               '${client.email}',
                                               style: TextStyle(
                                                 fontSize: 16.0,
+                                                color: Colors.black
                                               ),
                                             ),
                                             Text(
-                                              '${client.height}',
+                                              '${client.sex}',
                                               style: TextStyle(
                                                 fontSize: 16.0,
                                               ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Point: ',
-                                                  style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight: FontWeight.bold
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'dfdfdfdf',
-                                                  style: TextStyle(
-                                                    fontSize: 16.0,
-                                                  ),
-                                                ),
-                                              ],
                                             ),
                                           ]
                                       )
@@ -149,6 +142,7 @@ class ProfilePage extends StatelessWidget {
                                 await context.read<UserViewModel>().logout(context, data).then((val){
                                   if(val){
                                     Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                                    Navigator.of(context).pushNamed("/");
                                   }
                                 });
                               },

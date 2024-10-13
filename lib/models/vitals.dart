@@ -2,88 +2,63 @@ import 'package:meta/meta.dart';
 
 class Vitals {
   final String vitalId;
-  final int? diastol;
-  final int? systol;
-  final double? glycemia;
+  final String userId;
+  final double? weight;
+  final double? height;
   final double? bmi;
-  final String? userId;
+  final String? bloodPressure;
+  final double? bloodSugar;
+  final int? heartRate;
+  final double? temperature;
+  final double? oxygenSaturation;
 
   Vitals({
     required this.vitalId,
-    this.diastol,
-    this.systol,
-    this.glycemia,
+    required this.userId,
+    this.weight,
+    this.height,
     this.bmi,
-    this.userId,
+    this.bloodPressure,
+    this.bloodSugar,
+    this.heartRate,
+    this.temperature,
+    this.oxygenSaturation,
   });
 
-  /*Vitals.empty() : vitalId = '';*/
+  factory Vitals.empty() {
+    return Vitals(
+      vitalId: '',
+      userId: '',
+    );
+  }
 
   factory Vitals.fromJson(Map<String, dynamic> json) {
     return Vitals(
-      vitalId: json['vital_id'] as String,
-      diastol: json['diastol'] as int?,
-      systol: json['systol'] as int?,
-      glycemia: json['gycemia'] as double?, // Note: 'gycemia' is used here as per the SQL, but it might be a typo
-      bmi: json['BMI'] as double?,
-      userId: json['user_id'] as String?,
+      vitalId: json['vital_id'] ?? '',
+      userId: json['user_id'] ?? '',
+      weight: json['weight']?.toDouble(),
+      height: json['height']?.toDouble(),
+      bmi: json['bmi']?.toDouble(),
+      bloodPressure: json['blood_pressure'],
+      bloodSugar: json['blood_sugar']?.toDouble(),
+      heartRate: json['heart_rate']?.toInt(),
+      temperature: json['temperature']?.toDouble(),
+      oxygenSaturation: json['oxygen_saturation']?.toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'vital_id': vitalId,
-      'diastol': diastol,
-      'systol': systol,
-      'gycemia': glycemia, // Note: 'gycemia' is used here as per the SQL, but it might be a typo
-      'BMI': bmi,
       'user_id': userId,
+      'weight': weight,
+      'height': height,
+      'bmi': bmi,
+      'blood_pressure': bloodPressure,
+      'blood_sugar': bloodSugar,
+      'heart_rate': heartRate,
+      'temperature': temperature,
+      'oxygen_saturation': oxygenSaturation,
     };
-  }
-
-  Vitals copyWith({
-    String? vitalId,
-    int? diastol,
-    int? systol,
-    double? glycemia,
-    double? bmi,
-    String? userId,
-  }) {
-    return Vitals(
-      vitalId: vitalId ?? this.vitalId,
-      diastol: diastol ?? this.diastol,
-      systol: systol ?? this.systol,
-      glycemia: glycemia ?? this.glycemia,
-      bmi: bmi ?? this.bmi,
-      userId: userId ?? this.userId,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'Vitals(vitalId: $vitalId, diastol: $diastol, systol: $systol, glycemia: $glycemia, bmi: $bmi, userId: $userId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Vitals &&
-      other.vitalId == vitalId &&
-      other.diastol == diastol &&
-      other.systol == systol &&
-      other.glycemia == glycemia &&
-      other.bmi == bmi &&
-      other.userId == userId;
-  }
-
-  @override
-  int get hashCode {
-    return vitalId.hashCode ^
-      diastol.hashCode ^
-      systol.hashCode ^
-      glycemia.hashCode ^
-      bmi.hashCode ^
-      userId.hashCode;
   }
 }

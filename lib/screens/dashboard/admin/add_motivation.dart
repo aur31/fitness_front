@@ -1,5 +1,9 @@
+import 'package:fitness/main.dart';
 import 'package:fitness/services/app_colors.dart';
+import 'package:fitness/services/sharedPreferences.dart';
+import 'package:fitness/viewmodel/encouragement_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddMotivation extends StatefulWidget {
   const AddMotivation({super.key});
@@ -9,6 +13,20 @@ class AddMotivation extends StatefulWidget {
 }
 
 class _AddMotivationState extends State<AddMotivation> {
+  late TextEditingController _otivationController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _otivationController = new TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _otivationController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +39,10 @@ class _AddMotivationState extends State<AddMotivation> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                Image.asset("assets/images/logo.png",),
+                SizedBox(height: 40,),
                 TextFormField(
+                  controller: _otivationController,
                   decoration: InputDecoration(
                     hintText: "motivation",
                     filled: true,
@@ -42,11 +63,12 @@ class _AddMotivationState extends State<AddMotivation> {
                   ),
                   maxLines: 10,
                 ),
+                SizedBox(height: 20,),
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
+                        backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
                         //shadowColor: Colors.greenAccent,
                         elevation: 3,
@@ -55,8 +77,17 @@ class _AddMotivationState extends State<AddMotivation> {
                         ),
                         //minimumSize: Size(100, 40), //////// HERE
                       ),
-                      onPressed: (){
+                      onPressed: ()async{
+                        var data = {
+                          "encouragement" : _otivationController.text,
+                          "user_id": context.read<AppSharedPreferences>().user!.user_id,
+                        };
 
+                        await context.read<EncouragementViewModel>().register(context, data).then((val){
+                          if(val){
+                            Navigator.pop(context);
+                          }
+                        });
                       },
                       child: Text("Save")
                   ),

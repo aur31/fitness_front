@@ -1,9 +1,12 @@
 import 'package:fitness/screens/dashboard/admin/admin_dashboard.dart';
+import 'package:fitness/screens/dashboard/coach/coach_dashboard.dart';
 import 'package:fitness/screens/dashboard/user_dashboard.dart';
 import 'package:fitness/services/sharedPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
+import 'dashboard/diet/diet_dashboard.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   late FocusNode _bmiFocusNode,_weiFocusNode,_heiFocusNode;
   late TextEditingController _bmiController,_weiController,_heiController;
   double bmi = 0.0;
+
+
 
   @override
   void initState() {
@@ -194,6 +199,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    return Consumer<AppSharedPreferences>(
+      builder: (context,appSharedPreferences,child){
+        if(!appSharedPreferences.getLoginStatus) return nonLogin();
+        if(appSharedPreferences.user!.role == 0) return AdminDashboard();
+        if(appSharedPreferences.user!.role == 1) return DietDashboard();
+        if(appSharedPreferences.user!.role == 2) return CoachDashboard();
+        if(appSharedPreferences.user!.role == 3) return UserDashboard();
+        return nonLogin();
+      },
+    );
 
     return
       context.read<AppSharedPreferences>().getLoginStatus != true ? nonLogin() :

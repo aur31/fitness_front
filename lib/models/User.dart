@@ -1,81 +1,67 @@
 class User {
-  final String userId;
+  final String user_id;
   final String email;
   final String? name;
   final String? sex;
-  final String? password;
   final bool? status;
   int? role;
-  final DateTime? deleteAt;
 
   User({
-    required this.userId,
+    required this.user_id,
     required this.email,
     this.name,
     this.sex,
-    this.password,
     this.status,
     this.role,
-    this.deleteAt,
   });
 
-  /*User.empty()
-      : userId = '',
-        email = '';*/
+  User.EmptyUser()
+      : user_id = '',
+        email = '',name = "",sex = "",status= false,role = -1;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userId: json['user_id'] as String,
+      user_id: json['user_id'] as String,
       email: json['email'] as String,
       name: json['name'] as String?,
       sex: json['sex'] as String?,
-      password: json['password'] as String?,
       role: json['role'],
       status: json['status'] != null ? json['status'] == 1 : null,
-      deleteAt: json['delete_at'] != null
-          ? DateTime.parse(json['delete_at'] as String)
-          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'user_id': userId,
+      'user_id': user_id,
       'email': email,
       'name': name,
       'sex': sex,
-      'password': password,
       'role': role,
       'status': status != null ? (status! ? 1 : 0) : null,
-      'delete_at': deleteAt?.toIso8601String(),
     };
   }
 
   User copyWith({
-    String? userId,
+    String? user_id,
     String? email,
     String? name,
     String? sex,
     int? role,
-    String? password,
     bool? status,
-    DateTime? deleteAt,
   }) {
     return User(
-      userId: userId ?? this.userId,
+      user_id: user_id ?? this.user_id,
       email: email ?? this.email,
       name: name ?? this.name,
       sex: sex ?? this.sex,
       role: role ?? this.role,
-      password: password ?? this.password,
       status: status ?? this.status,
-      deleteAt: deleteAt ?? this.deleteAt,
     );
   }
 
   @override
   String toString() {
-    return 'User(userId: $userId, email: $email, name: $name, sex: $sex, status: $status, role: $role, deleteAt: $deleteAt)';
+    return 'User(userId: $user_id, email: $email, name: $name, sex: $sex, status: $status, role: $role)';
   }
 
   @override
@@ -83,26 +69,22 @@ class User {
     if (identical(this, other)) return true;
 
     return other is User &&
-      other.userId == userId &&
+      other.user_id == user_id &&
       other.email == email &&
       other.name == name &&
       other.sex == sex &&
       other.role == role &&
-      other.password == password &&
-      other.status == status &&
-      other.deleteAt == deleteAt;
+      other.status == status;
   }
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return user_id.hashCode ^
       email.hashCode ^
       name.hashCode ^
       sex.hashCode ^
       role.hashCode ^
-      password.hashCode ^
-      status.hashCode ^
-      deleteAt.hashCode;
+      status.hashCode;
   }
 }
 

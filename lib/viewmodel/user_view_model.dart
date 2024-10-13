@@ -14,6 +14,7 @@ class UserViewModel extends ChangeNotifier {
 
   bool chekingEmailExist = false;
   bool updatingUser = false;
+  bool loadingUser = false;
   bool isregistring = false;
   bool islogging = false;
   bool isloggingout = false;
@@ -21,7 +22,45 @@ class UserViewModel extends ChangeNotifier {
   bool isSendingResetPasswordCode = false;
   bool isUpdatingPassword = false;
 
-  User user_reseting_password = new User.EmptyUser();
+  List<User> users = [];
+
+  Future<bool> getUsers()async{
+    if(loadingUser) return false;
+    loadingUser = true;
+    users.clear();
+    notifyListeners();
+    try{
+      print('comment above');
+      final response = await CallApi().authGetData("users");
+
+      print('comment below');
+      print(response.body);
+      //print(response.headers);
+      if(response.statusCode == 200){
+        print("inside");
+        Iterable list = jsonDecode(response.body);
+        print(list);
+
+        users.addAll(List<User>.from(list.map((e) => User.fromJson(e))));
+
+        loadingUser = false;
+        notifyListeners();
+        return true;
+      }else{
+        print(response.headers);
+        print(response.body);
+        print(response.statusCode);
+        loadingUser = false;
+        notifyListeners();
+        return false;
+      }
+    }catch(e){
+      print(e.toString()+'gfhgfhgfhg');
+      loadingUser = false;
+      notifyListeners();
+      return false;
+    }
+  }
 
   Future<bool> register(BuildContext context, data) async {
     if(isregistring) return false;
@@ -30,15 +69,18 @@ class UserViewModel extends ChangeNotifier {
     //final url = "http://www.omdbapi.com/?s=$keyword&apikey=YOURAPIKEYHERE";
     //final response = await http.get(url as Uri);
     try {
-      final response = await CallApi().unAuthPostData(data,"register");
+      final response = await CallApi().unAuthPostData(data,"register/user");
 
       print(response.body);
       if(response.statusCode == 200){
-        var body = jsonDecode(response.body)["user"];
+        var body = jsonDecode(response.body);
         User user = User.fromJson(body);
+
+        users.add(user);
+
         isregistring = false;
         notifyListeners();
-        return jsonDecode(response.body)["success"];
+        return true;
       }else{
         isregistring = false;
         notifyListeners();
@@ -49,8 +91,9 @@ class UserViewModel extends ChangeNotifier {
       isregistring = false;
       notifyListeners();
       return false;
-    }on SocketException catch(_){
+    }on SocketException catch(e){
       print('no internet');
+      print(e.message);
       isregistring = false;
       notifyListeners();
       return false;

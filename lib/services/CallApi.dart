@@ -14,7 +14,7 @@ class CallApi{
   late String token;
   AppSharedPreferences appSharedPreferences = AppSharedPreferences();
 
-  static final String url = "http://192.168.8.101:8080/api/";
+  static final String url = "http://192.168.60.98:8080/api/";
 
 
   final Map<String,String> roots = {

@@ -1,13 +1,46 @@
 import 'package:fitness/services/app_colors.dart';
 import 'package:fitness/services/sharedPreferences.dart';
+import 'package:fitness/viewmodel/user_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-class AdminDashboard extends StatelessWidget {
+class AdminDashboard extends StatefulWidget {
+  @override
+  State<AdminDashboard> createState() => _AdminDashboardState();
+}
+
+class _AdminDashboardState extends State<AdminDashboard> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 0)).then((val)async{
+      await context.read<UserViewModel>().getUsers().then((val){
+        if(val){
+
+        }
+      });
+    });
+  }
+
+  int femalNumber(UserViewModel userViewModel){
+    int number = userViewModel.users.where((element)=>element.sex!.toLowerCase().compareTo("f") == 0).length;
+    return number;
+  }
+
+  int maleNumber(UserViewModel userViewModel){
+    int number = userViewModel.users.where((element)=>element.sex!.toLowerCase().compareTo("m") == 0).length;
+    return number;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         title: Text('Admin Dashboard'),
         actions: [
           TextButton(
@@ -27,112 +60,137 @@ class AdminDashboard extends StatelessWidget {
           return SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(20),
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: AppColors.primaryColor,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
+              child: Consumer<UserViewModel>(
+                builder: (context,userViewModel,child){
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 20,right: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.blue)
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("45"),
-                              SizedBox(width: 10,),
-                              Icon(Icons.people),
+                              Image.asset("assets/images/logo.png",width: 100,height: 50,),
+                              InkWell(
+                                onTap: (){
+                                  Navigator.of(context).pushNamed("/view_users");
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(20),
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text("${userViewModel.users.length}"),
+                                          SizedBox(width: 10,),
+                                          Icon(Icons.people),
+                                        ],
+                                      ),
+                                      TextButton(
+                                          onPressed: (){
+                                            Navigator.of(context).pushNamed("/view_users");
+                                          },
+                                          child: Text("View")
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          TextButton(
-                              onPressed: (){
-                                Navigator.of(context).pushNamed("/view_users");
-                              },
-                              child: Text("View")
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CircleAvatar(radius: 50,),
-                            Text("45 Males")
-                          ],
                         ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            CircleAvatar(radius: 50,),
-                            Text("45 Female")
-                          ],
-                        )
-                      ],
-                    ),
-
-                    InkWell(
-                      onTap: (){
-                        Navigator.of(context).pushNamed("/testimonies");
-                      },
-                      child: Container(
-                        height: 100,
-                        margin: EdgeInsets.all(20),
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.primaryColor,
-                        ),
-                        child: Center(child: Text("Testimonies")),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.of(context).pushNamed("/motivations");
-                            },
-                            child: Container(
-                              height: 100,
-                              margin: EdgeInsets.all(20),
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: AppColors.primaryColor,
-                              ),
-                              child: Center(child: Text("Motivations")),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularPercentIndicator(radius: 40,lineWidth: 8,percent: femalNumber(userViewModel) / userViewModel.users.length,center: Text("${femalNumber(userViewModel)}"),),
+                                SizedBox(height: 20,),
+                                Text("Females")
+                              ],
                             ),
-                          ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularPercentIndicator(radius: 40,lineWidth: 8,percent: maleNumber(userViewModel) / userViewModel.users.length,center: Text("${maleNumber(userViewModel)}")),
+                                SizedBox(height: 20,),
+                                Text("Males")
+                              ],
+                            )
+                          ],
                         ),
+
                         InkWell(
                           onTap: (){
-                            Navigator.of(context).pushNamed("/add_user");
+                            Navigator.of(context).pushNamed("/testimonies");
                           },
                           child: Container(
                             height: 100,
-                            margin: EdgeInsets.all(20),
+                            margin: EdgeInsets.all(10),
                             padding: EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: AppColors.primaryColor,
                             ),
-                            child: Center(child: Text("Add User")),
+                            child: Center(child: Text("Testimonies")),
                           ),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.of(context).pushNamed("/motivations");
+                                },
+                                child: Container(
+                                  height: 100,
+                                  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  child: Center(child: Text("Motivations")),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: (){
+                                Navigator.of(context).pushNamed("/add_user");
+                              },
+                              child: Container(
+                                height: 100,
+                                margin: EdgeInsets.all(10),
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: AppColors.primaryColor,
+                                ),
+                                child: Center(child: Text("Add User")),
+                              ),
+                            )
+                          ],
                         )
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           );
@@ -397,6 +455,4 @@ class AdminDashboard extends StatelessWidget {
       ),
     );
   }
-
-
 }
