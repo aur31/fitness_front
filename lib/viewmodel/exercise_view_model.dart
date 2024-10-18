@@ -18,6 +18,7 @@ class ExerciseViewModel extends ChangeNotifier {
   bool isregistring = false;
 
   List<Exercise> exercises = [];
+  List<Exercise> catExercises = [];
 
   Future<bool> getExercise()async{
     if(loadingExercise) return false;
@@ -37,6 +38,44 @@ class ExerciseViewModel extends ChangeNotifier {
         print(list);
 
         exercises.addAll(List<Exercise>.from(list.map((e) => Exercise.fromJson(e))));
+
+        loadingExercise = false;
+        notifyListeners();
+        return true;
+      }else{
+        print(response.headers);
+        print(response.body);
+        print(response.statusCode);
+        loadingExercise = false;
+        notifyListeners();
+        return false;
+      }
+    }catch(e){
+      print(e.toString()+'gfhgfhgfhg');
+      loadingExercise = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> getCategoryExercise({required String id_cat})async{
+    if(loadingExercise) return false;
+    loadingExercise = true;
+    catExercises.clear();
+    notifyListeners();
+    try{
+      print('comment above');
+      final response = await CallApi().authGetData("category/exercise/${id_cat}");
+
+      print('comment below');
+      print(response.body);
+      //print(response.headers);
+      if(response.statusCode == 200){
+        print("inside");
+        Iterable list = jsonDecode(response.body);
+        print(list);
+
+        catExercises.addAll(List<Exercise>.from(list.map((e) => Exercise.fromJson(e))));
 
         loadingExercise = false;
         notifyListeners();

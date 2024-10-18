@@ -20,6 +20,7 @@ import 'package:fitness/viewmodel/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'screens/dashboard/user/view_cat_exercise.dart';
 import 'viewmodel/encouragement_view_model.dart';
 import 'viewmodel/sport_category_view_model.dart';
 
@@ -68,6 +69,9 @@ class MyApp extends StatelessWidget {
 
         //COACHE
         '/liste_sport_cat': (context)=>ListeSportCategoryScreen(),
+
+        //EMPLOYEE
+
       },
       title: 'Flutter Demo',
       theme: ThemeData(

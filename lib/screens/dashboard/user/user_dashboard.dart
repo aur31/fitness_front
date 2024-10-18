@@ -1,9 +1,10 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fitness/components/comments.dart';
 import 'package:fitness/components/market_place.dart';
 import 'package:fitness/components/menu.dart';
 import 'package:fitness/components/sport.dart';
-import 'package:fitness/screens/dashboard/user/user_dashboard.dart';
 import 'package:fitness/services/sharedPreferences.dart';
+import 'package:fitness/viewmodel/encouragement_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,10 @@ class _UserDashboardState extends State<UserDashboard> {
       viewportFraction: 1,
     );
     super.initState();
+
+    Future.delayed(Duration(seconds: 0)).then((val)async{
+      await context.read<EncouragementViewModel>().getEncouragement();
+    });
   }
 
   @override
@@ -51,7 +56,7 @@ class _UserDashboardState extends State<UserDashboard> {
           setState(() {
             _currentIndex = index;
           });
-          
+
           pageController.animateToPage(index,duration: Duration(milliseconds: 200),curve: Curves.easeIn);
 
         },
@@ -127,8 +132,11 @@ class _homeState extends State<home> {
           Container(
             height: size/4,
             width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.blue[100]
+            ),
             child: Card(
-              child: Text("Motivation"),
+              child: TextCarousel(),
             ),
           ),
           SizedBox(height: 15,),
@@ -212,3 +220,56 @@ class _DietState extends State<Diet> {
 }
 
 
+
+
+class TextCarousel extends StatelessWidget {
+  final List<String> texts = [
+    'Welcome to Flutter',
+    'Swipe to see more',
+    'This is a text carousel',
+    'Customizable and easy to use',
+    'Great for displaying multiple messages',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<EncouragementViewModel>(
+      builder: (context, encouragementViewModel, child) {
+      return CarouselSlider(
+      options: CarouselOptions(
+        height: 160.0,
+        autoPlay: true,
+        autoPlayInterval: Duration(seconds: 3),
+        autoPlayAnimationDuration: Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        pauseAutoPlayOnTouch: true,
+        aspectRatio: 2.0,
+        enlargeCenterPage: true,
+      ),
+      items: encouragementViewModel.encouragements.map((encouragement) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              decoration: BoxDecoration(
+                //color: Colors.blue,
+                image: DecorationImage(image: AssetImage("assets/images/food.jpg")),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Center(
+                child: Text(
+                  "${encouragement.encouragement}",
+                  style: TextStyle(fontSize: 22.0, color: Colors.black,fontWeight: FontWeight.w900),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  },
+);
+  }
+}
