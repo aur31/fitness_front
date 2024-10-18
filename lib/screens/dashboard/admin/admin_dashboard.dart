@@ -26,11 +26,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   int femalNumber(UserViewModel userViewModel){
+    if(userViewModel.users.isEmpty) return 0;
     int number = userViewModel.users.where((element)=>element.sex!.toLowerCase().compareTo("f") == 0).length;
     return number;
   }
 
   int maleNumber(UserViewModel userViewModel){
+    if(userViewModel.users.isEmpty) return 0;
     int number = userViewModel.users.where((element)=>element.sex!.toLowerCase().compareTo("m") == 0).length;
     return number;
   }

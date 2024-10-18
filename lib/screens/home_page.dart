@@ -1,6 +1,6 @@
 import 'package:fitness/screens/dashboard/admin/admin_dashboard.dart';
 import 'package:fitness/screens/dashboard/coach/coach_dashboard.dart';
-import 'package:fitness/screens/dashboard/user_dashboard.dart';
+import 'package:fitness/screens/dashboard/user/user_dashboard.dart';
 import 'package:fitness/services/sharedPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

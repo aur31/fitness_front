@@ -6,7 +6,7 @@ import 'package:fitness/screens/dashboard/admin/testimonies.dart';
 import 'package:fitness/screens/dashboard/admin/view_users_screen.dart';
 import 'package:fitness/screens/dashboard/coach/coach_dashboard.dart';
 import 'package:fitness/screens/dashboard/coach/list_category_screen.dart';
-import 'package:fitness/screens/dashboard/user_dashboard.dart';
+import 'package:fitness/screens/dashboard/user/user_dashboard.dart';
 import 'package:fitness/screens/home_page.dart';
 import 'package:fitness/screens/login_screen.dart';
 import 'package:fitness/screens/profile_page.dart';

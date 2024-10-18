@@ -2,7 +2,7 @@ import 'package:fitness/components/comments.dart';
 import 'package:fitness/components/market_place.dart';
 import 'package:fitness/components/menu.dart';
 import 'package:fitness/components/sport.dart';
-import 'package:fitness/screens/dashboard/user_dashboard.dart';
+import 'package:fitness/screens/dashboard/user/user_dashboard.dart';
 import 'package:fitness/services/sharedPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +51,7 @@ class _UserDashboardState extends State<UserDashboard> {
           setState(() {
             _currentIndex = index;
           });
-
+          
           pageController.animateToPage(index,duration: Duration(milliseconds: 200),curve: Curves.easeIn);
 
         },
